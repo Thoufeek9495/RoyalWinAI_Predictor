@@ -1,0 +1,37 @@
+name: 📦 Build APK with Buildozer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y zip unzip git openjdk-17-jdk python3-pip libffi-dev build-essential libssl-dev libsqlite3-dev zlib1g-dev libjpeg-dev libfreetype6-dev libpng-dev libgstreamer1.0-dev libmtdev-dev libgl1-mesa-dev cython
+
+    - name: Install buildozer
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install buildozer
+
+    - name: Build APK
+      run: |
+        buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: RoyalWinAI.apk
+        path: bin/*.apk
