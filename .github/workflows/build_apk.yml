@@ -9,19 +9,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install Cython and Buildozer
+      - name: Install Buildozer and dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip build-essential libssl-dev \
             libffi-dev libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev \
-            libsqlite3-dev git zip unzip openjdk-11-jdk libncurses5
+            libsqlite3-dev git zip unzip openjdk-17-jdk libncurses5
 
           pip install --upgrade pip
           pip install buildozer cython
@@ -31,7 +31,7 @@ jobs:
           buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: RoyalWinAI
           path: bin/*.apk
