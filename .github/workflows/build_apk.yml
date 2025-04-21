@@ -1,34 +1,46 @@
-name: 📦 Build APK with Buildozer
+name: 📦 Build APK
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y python3-pip build-essential git zip unzip openjdk-17-jdk
-        pip install --upgrade pip Cython virtualenv
-        pip install buildozer
+      - name: 🛠 Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            zip unzip openjdk-17-jdk \
+            python3-pip build-essential \
+            git libffi-dev libssl-dev \
+            libxml2-dev libxslt1-dev zlib1g-dev \
+            libncurses5 libncurses5-dev \
+            libjpeg-dev libfreetype6-dev \
+            libgstreamer1.0-dev libmtdev-dev \
+            libgl1-mesa-dev libgles2-mesa-dev \
+            libsqlite3-dev cython
 
-    - name: Build APK
-      run: |
-        buildozer -v android debug
+      - name: 📦 Install Buildozer and dependencies
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython virtualenv
 
-    - name: Upload APK
-  uses: actions/upload-artifact@v2
-  with:
-    name: royalwinai-apk
-    path: ./bin/*.apk
+      - name: ⚙️ Initialize Buildozer
+        run: |
+          buildozer android debug
 
+      - name: 📤 Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: royalwinai-apk
+          path: ./bin/*.apk
