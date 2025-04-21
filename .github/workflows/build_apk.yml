@@ -31,7 +31,8 @@ jobs:
           buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: RoyalWinAI
-          path: bin/*.apk
+  uses: actions/upload-artifact@d9c8eb86cfedb98f2a1d37b401b3b6a9cfab2e0a
+  with:
+    name: RoyalWinAI-apk
+    path: ./bin/*.apk
+
